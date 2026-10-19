@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DeepSeek API 余额",
+    "description": "输入 DeepSeek API Key，在侧边栏设置入口旁显示该 Key 的可用余额、充值余额和赠金余额。"
+  }
+}

@@ -1,0 +1,3 @@
+- insert:
+    - id: deepseek-api-balance
+      name: '@local/deepseek-api-balance'
