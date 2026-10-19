@@ -2,7 +2,7 @@
 
 # DeepSeek API Balance
 
-![Plugin icon](icon.svg)
+<img src="icon.svg" alt="Plugin icon" width="64" height="64">
 
 A Web UI plugin for DeepSeek Harness that shows the balance of a DeepSeek API key.
 

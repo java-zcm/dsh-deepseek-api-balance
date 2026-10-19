@@ -2,7 +2,7 @@
 
 # DeepSeek API 余额
 
-![插件图标](icon.svg)
+<img src="icon.svg" alt="插件图标" width="64" height="64">
 
 一个 DeepSeek Harness 的 Web UI 插件：输入 DeepSeek 开放平台的 API Key，在侧边栏显示这个 Key 的余额。
 
