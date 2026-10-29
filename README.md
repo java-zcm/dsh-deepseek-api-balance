@@ -1,22 +1,21 @@
 [简体中文](README.md) | [English](README.en.md)
 
-# DeepSeek API 余额
+# DeepSeek API 余额 / Kimi 用量
 
 <img src="icon.svg" alt="插件图标" width="64" height="64">
 
-一个 DeepSeek Harness 的 Web UI 插件：输入 DeepSeek 开放平台的 API Key，在侧边栏显示这个 Key 的余额。
+一个 DeepSeek Harness 的 Web UI 插件：输入 DeepSeek 开放平台的 API Key 显示余额，输入 Kimi（月之暗面）API Key 显示 Coding 套餐用量，都在侧边栏左下角展示。
 
-> 这里查询的是 `api.deepseek.com` 的 **API Key 余额**，不是已登录 DeepSeek 账号的钱包余额。
+> DeepSeek 查的是 `api.deepseek.com` 的 **API Key 余额**（不是已登录账号的钱包）；Kimi 查的是 `api.kimi.com` 的 **Coding 套餐用量窗口**（5 小时 / 每周 / 每月），与 dsh-subusage 的 `kimi-coding` 路由同契约，Key 可直接复用。
 
 ## 功能
 
-- 侧边栏底部、设置按钮上方显示「API 余额」徽标。
-- 展开侧边栏时显示可用余额；点击徽标立即刷新。
-- 折叠侧边栏时只显示钥匙图标，鼠标悬停可看金额。
-- 设置 → **API 余额** 页面可以输入、验证、更换、清除 API Key。
-- 分别显示可用余额、充值余额、赠金余额（按币种）。
+- 侧边栏底部、设置按钮上方显示两行徽标：DeepSeek 余额 + Kimi 用量。
+- 每行点击单独刷新；切回页面超过 60 秒自动刷新。
+- 折叠侧边栏时合并成一个图标，悬停看两项摘要。
+- 设置 → **API 余额** 页面可以分别输入、验证、更换、清除两个 Key。
+- DeepSeek 显示可用 / 充值 / 赠金余额（按币种）；Kimi 显示各窗口已用与剩余百分比、重置时间和套餐名。
 - Key 保存在本机凭据文件中，页面不会拿回 Key。
-- Key 无效时不会保存；网络失败会提示重试。
 
 ## 安装
 
@@ -32,7 +31,7 @@ Host 会先用 `git ls-remote` 检查仓库；公开仓库不需要额外认证�
 
 ### 从 tgz 安装
 
-下载 Release 里的 `deepseek-api-balance-1.0.0.tgz`，在同一个安装对话框里填这个文件的绝对路径。
+下载 Release 里的 `deepseek-api-balance-1.1.0.tgz`，在同一个安装对话框里填这个文件的绝对路径。
 
 ### 从文件夹安装
 
@@ -40,20 +39,19 @@ Host 会先用 `git ls-remote` 检查仓库；公开仓库不需要额外认证�
 
 ## 使用
 
-1. 打开左下角 **设置**。
-2. 进入 **API 余额**。
-3. 粘贴 DeepSeek API Key（以 `sk-` 开头）。
-4. 点 **保存并验证**。
-5. 验证成功后，侧边栏底部会显示余额；点击徽标刷新。
+1. 打开左下角 **设置**，进入 **API 余额**。
+2. DeepSeek：粘贴 API Key（以 `sk-` 开头），点 **保存并验证**。
+3. Kimi：粘贴 Kimi 编程套餐的 API Key，点 **保存并验证**。
+4. 验证成功后，侧边栏底部两行徽标分别显示 DeepSeek 余额和 Kimi 剩余用量；点击对应行刷新。
 
-清除 Key：在同一页面点 **清除专用 Key**。
+清除 Key：在同一页面点对应的 **清除** 按钮。
 
 ## Key 存在哪里
 
-- 专用 Key 保存在本机凭据文件中的 `DEEPSEEK_BALANCE_API_KEY`。
-- 如果没有设置专用 Key，会自动回退使用 `DEEPSEEK_API_KEY`。
+- DeepSeek 专用 Key：`DEEPSEEK_BALANCE_API_KEY`，未设置时回退 `DEEPSEEK_API_KEY`；Host 请求 `https://api.deepseek.com/user/balance`。
+- Kimi 专用 Key：`KIMI_CODING_API_KEY`，未设置时回退 `KIMI_API_KEY`；Host 请求 `https://api.kimi.com/coding/v1/usages`（套餐名取 `/coding/v1/me`）。
+- 如果已安装 dsh-subusage 并配过 Kimi，这里会自动复用同一把 Key，不用重新填。
 - Windows 默认凭据文件：`%USERPROFILE%\.dsh\.credentials.yaml`。
-- 页面只收到余额和状态，不会拿回 Key；Host 直接请求 `https://api.deepseek.com/user/balance`。
 
 **不要**把 `.credentials.yaml` 提交到 Git 或发给别人。插件仓库本身不含任何 Key。
 
@@ -76,8 +74,8 @@ Host 会先用 `git ls-remote` 检查仓库；公开仓库不需要额外认证�
 
 | 文件 | 作用 |
 | --- | --- |
-| `index.js` | Host 半：读取凭据、请求 DeepSeek 余额、提供 `/api/deepseek-balance/balance` 路由 |
-| `client.js` | Client 半：侧边栏徽标 + 设置页表单 |
+| `index.js` | Host 半：凭据读写、DeepSeek 余额与 Kimi 用量请求、`/api/deepseek-api-balance/balance` 路由 |
+| `client.js` | Client 半：双行侧边栏徽标 + 设置页两个表单卡片 |
 | `cordis.patch.yml` | 插件 bundle 的 Loader patch |
 | `locale/*.json` | 插件管理器里显示的中英文标题和描述 |
 | `icon.svg` | 插件图标 |

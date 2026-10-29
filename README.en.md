@@ -1,22 +1,21 @@
 [简体中文](README.md) | English
 
-# DeepSeek API Balance
+# DeepSeek API Balance / Kimi Usage
 
 <img src="icon.svg" alt="Plugin icon" width="64" height="64">
 
-A Web UI plugin for DeepSeek Harness that shows the balance of a DeepSeek API key.
+A Web UI plugin for DeepSeek Harness: enter a DeepSeek Platform API key to show its balance, and a Kimi (Moonshot) API key to show its coding-plan usage — both in the bottom-left sidebar.
 
-> This reads the **API key balance** at `api.deepseek.com`, not the wallet balance of a signed-in DeepSeek account.
+> The DeepSeek side reads the **API key balance** at `api.deepseek.com` (not a signed-in account wallet). The Kimi side reads the **coding-plan usage windows** (5-hour / weekly / monthly) at `api.kimi.com`, using the same contract as dsh-subusage's `kimi-coding` route, so an existing key can be reused.
 
 ## Features
 
-- A sidebar badge beside Settings shows the key's available balance.
-- Click the badge to refresh; returning to the page also refreshes stale data.
-- Collapsed sidebar shows only the key icon; hover for the amount.
-- Settings → **API Balance** page to paste, verify, replace, or clear a key.
-- Shows available, topped-up, and granted amounts per currency.
-- The key stays in the local credential store and is never sent back to the page.
-- An invalid key is not saved; a network failure shows a retryable error.
+- Two badge rows beside Settings at the sidebar foot: DeepSeek balance + Kimi usage.
+- Click a row to refresh it; stale data refreshes when the page regains focus after 60s.
+- Collapsed sidebar merges both into one icon; hover shows both summaries.
+- Settings → **API Balance** has separate forms to enter, verify, replace, and clear each key.
+- DeepSeek shows available / topped-up / granted amounts per currency; Kimi shows used vs remaining percent per window, reset times, and the plan name.
+- Keys stay in the local credential store and never reach the page.
 
 ## Install
 
@@ -32,7 +31,7 @@ The Host checks the repository with `git ls-remote` first; a public repository n
 
 ### From a tgz
 
-Download `deepseek-api-balance-1.0.0.tgz` from a release and enter the absolute path to that file in the same install dialog.
+Download `deepseek-api-balance-1.1.0.tgz` from a release and enter the absolute path to that file in the same install dialog.
 
 ### From a folder
 
@@ -40,20 +39,19 @@ Extract the zip and enter the **folder that contains `package.json`** (not the z
 
 ## Usage
 
-1. Open **Settings** at the bottom of the sidebar.
-2. Open **API Balance**.
-3. Paste a DeepSeek API key (starts with `sk-`).
-4. Click **Save and verify**.
-5. The sidebar badge shows the balance; click it to refresh.
+1. Open **Settings** at the bottom of the sidebar, then open **API Balance**.
+2. DeepSeek: paste an API key (starts with `sk-`) and click **Save and verify**.
+3. Kimi: paste a Kimi coding-plan API key and click **Save and verify**.
+4. The two sidebar rows show the DeepSeek balance and the Kimi remaining usage; click a row to refresh it.
 
-To remove the key, click **Clear key** on the same page.
+To remove a key, click its **Clear key** button on the same page.
 
-## Where the key is stored
+## Where the keys are stored
 
-- The dedicated key is stored in the local credential store under `DEEPSEEK_BALANCE_API_KEY`.
-- If no dedicated key is set, the plugin falls back to `DEEPSEEK_API_KEY`.
+- DeepSeek dedicated key: `DEEPSEEK_BALANCE_API_KEY`, falling back to `DEEPSEEK_API_KEY`; the Host calls `https://api.deepseek.com/user/balance`.
+- Kimi dedicated key: `KIMI_CODING_API_KEY`, falling back to `KIMI_API_KEY`; the Host calls `https://api.kimi.com/coding/v1/usages` (plan name from `/coding/v1/me`).
+- If dsh-subusage is installed and already has a Kimi key, this plugin reuses the same credential — no need to enter it again.
 - Default credential file on Windows: `%USERPROFILE%\.dsh\.credentials.yaml`.
-- The page only receives balance amounts and a status; the Host calls `https://api.deepseek.com/user/balance` directly.
 
 **Never** commit `.credentials.yaml` or send it to anyone. This repository contains no API key.
 
@@ -76,8 +74,8 @@ To remove the key, click **Clear key** on the same page.
 
 | File | Purpose |
 | --- | --- |
-| `index.js` | Host half: read the credential, query DeepSeek, serve `/api/deepseek-balance/balance` |
-| `client.js` | Client half: sidebar badge + settings page form |
+| `index.js` | Host half: credential IO, DeepSeek balance + Kimi usage requests, `/api/deepseek-api-balance/balance` route |
+| `client.js` | Client half: two-row sidebar badge + two settings cards |
 | `cordis.patch.yml` | Loader patch for the plugin bundle |
 | `locale/*.json` | English and Chinese titles/descriptions shown by Plugin Manager |
 | `icon.svg` | Plugin icon |

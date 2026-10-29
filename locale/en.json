@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "DeepSeek API Balance",
-    "description": "Enter a DeepSeek API key and show its available, topped-up, and granted balance beside Settings."
+    "title": "DeepSeek API Balance / Kimi Usage",
+    "description": "Show a DeepSeek API key balance and a Kimi coding-plan usage beside Settings in the sidebar. Keys stay in the local credential store and never reach the page."
   }
 }

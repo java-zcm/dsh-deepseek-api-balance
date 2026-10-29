@@ -1,9 +1,9 @@
 {
   "name": "@local/deepseek-api-balance",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "license": "MIT",
-  "description": "Shows the balance of a DeepSeek API key entered by the user.",
+  "description": "Shows the balance of a DeepSeek API key and the usage of a Kimi coding plan in the sidebar and settings. Keys stay in the local credential store.",
   "type": "module",
   "exports": {
     ".": "./index.js",

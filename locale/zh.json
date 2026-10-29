@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "DeepSeek API 余额",
-    "description": "输入 DeepSeek API Key，在侧边栏设置入口旁显示该 Key 的可用余额、充值余额和赠金余额。"
+    "title": "DeepSeek API 余额 / Kimi 用量",
+    "description": "在侧边栏设置入口旁显示 DeepSeek API Key 的余额和 Kimi 编程套餐的用量。Key 保存在本机凭据文件中，不会回传到页面。"
   }
 }
